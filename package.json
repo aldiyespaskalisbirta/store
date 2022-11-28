@@ -9,7 +9,9 @@
     "daisyui": "^2.42.1",
     "next": "latest",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-rating": "^2.0.5",
+    "react-stars": "^2.2.5"
   },
   "devDependencies": {
     "@iconify/react": "^4.0.0",

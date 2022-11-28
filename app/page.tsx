@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 const fetchProducts = async () => {
@@ -18,10 +19,13 @@ export default async function page() {
                 <img src={product.thumbnail} alt={product.title} />
               </figure>
               <div className="card-body">
-                <button className="card-title cursor-pointer">
+                <Link
+                  href={`/${product.id}`}
+                  className="card-title cursor-pointer"
+                >
                   {product.title.substring(0, 10)}
                   <div className="badge badge-secondary">$ {product.price}</div>
-                </button>
+                </Link>
                 <p>{product.description.substring(0, 25)}...</p>
                 <div className="card-actions justify-end">
                   <div className="badge badge-outline">{product.category}</div>
