@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React, { useState } from "react";
 // import { Icon } from '@iconify/react';
 
@@ -19,14 +20,20 @@ export default async function InformationProduct({
   params: { cartId },
 }: PageProps) {
   const product = await fetchProducts(cartId);
-  const total = 0;
+
   return (
     <div className="grid min-h-screen items-center">
       <div className="card card-side bg-base-100 shadow-xl">
         <div className="w-96 h-full carousel rounded-box">
           {product.images.map((image, idx) => (
             <div className="carousel-item w-full" key={idx}>
-              <img src={image} className="h-96" alt={product.title} />
+              <Image
+                src={image}
+                height={350}
+                width={350}
+                alt={product.title}
+                style={{ objectFit: "contain" }}
+              />
             </div>
           ))}
         </div>
@@ -71,4 +78,13 @@ export default async function InformationProduct({
       </div>
     </div>
   );
+}
+
+export async function generateStaticParams() {
+  const res = await fetch(`${process.env.BASEURL}/products`);
+  const { products } = await res.json();
+
+  return products.map((product) => ({
+    cartId: product.id.toString(),
+  }));
 }
