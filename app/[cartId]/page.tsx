@@ -9,7 +9,7 @@ type PageProps = {
 };
 
 const fetchProducts = async (cartId: string) => {
-  const res = await fetch(`${process.env.BASEURL}/products/${cartId}`, {
+  const res = await fetch(`${process.env.BASE_URL}/products/${cartId}`, {
     next: { revalidate: 60 },
   });
   const product = await res.json();
@@ -22,66 +22,77 @@ export default async function InformationProduct({
   const product = await fetchProducts(cartId);
 
   return (
-    <div className="grid min-h-screen items-center">
-      <div className="card card-side bg-base-100 shadow-xl">
-        <div className="w-96 h-full carousel rounded-box">
-          {product.images.map((image, idx) => (
-            <div className="carousel-item w-full" key={idx}>
-              <Image
-                src={image}
-                height={350}
-                width={350}
-                alt={product.title}
-                style={{ objectFit: "contain" }}
+    <section>
+      <div className="container grid place-items-center h-screen">
+        <div className="grid grid-cols-9 bg-white rounded-lg p-4 shadow-lg">
+          {/* left */}
+          <div className="col-span-3">
+            <div className="flex overflow-scroll scrollbar-hide">
+              {product.images?.map((image) => (
+                <div className="images">
+                  <div className="image relative w-96 h-96">
+                    <Image src={image} alt={product.title} fill />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* right */}
+          <div className="relative information col-span-6 p-3">
+            {/* title */}
+            <h1 className="text-4xl font-semibold">{product.title}</h1>
+            {/* category */}
+            <div className="space-x-3">
+              <div className="badge badge-outline">{product.category}</div>
+              <div className="badge badge-outline">{product.brand}</div>
+            </div>
+            {/* description */}
+            <div className="mt-5">
+              <h2 className="text-2xl font-semibold">Description</h2>
+              <p className="text-gray-600 text-md">{product.description}</p>
+            </div>
+            {/* price */}
+            <div className="mt-5">
+              <h2 className="text-4xl font-bold text-blue-800">
+                ${product.price}
+              </h2>
+            </div>
+            {/* quantity */}
+            <div className="flex space-x-2 items-center font-semibold text-lg mt-5">
+              <button className="px-4 py-2 border-2 rounded-md active:scale-95">
+                -
+              </button>
+              <input
+                type="text"
+                name="quantity"
+                id="quantity"
+                className="text-center outline-none border-none w-4 h-4"
               />
+              <button className="px-4 py-2 border-2 rounded-md active:scale-95">
+                +
+              </button>
+              <div>
+                <p>stock: {product.stock}</p>
+              </div>
             </div>
-          ))}
-        </div>
-
-        <div className="card-body">
-          {/* title */}
-          <div className="title">
-            <h2 className="card-title">{product.title}</h2>
-          </div>
-
-          {/* rating */}
-          <div className="rating">
-            <p>
-              {/* <Icon icon="material-symbols:star" className="text-yellow-400" /> */}
-              {product.rating}
-            </p>
-          </div>
-
-          {/* description */}
-          <div className="description">
-            <h2 className="font-semibold text-md ">Description</h2>
-            <p className="card-description">{product.description}</p>
-          </div>
-
-          {/* price */}
-          <div className="price">
-            <h1 className="text-2xl text-red-400 font-bold">
-              $ {product.price}
-            </h1>
-          </div>
-          {/* action */}
-          <div className="card-actions absolute space-x-4 bottom-5 items-center">
-            <div className="btn-group">
-              <button className="btn">-</button>
-              <button className="btn">2</button>
-              <button className="btn">+</button>
+            {/* action */}
+            <div className="absolute bottom-4 right-6 space-x-4 font-semibold text-white">
+              <button className="px-4 py-2 bg-orange-600 rounded-lg hover:scale-105 transition transform duration-200 active:scale-95">
+                Add to cart
+              </button>
+              <button className="px-4 py-2 bg-orange-600 rounded-lg hover:scale-105 transition transform duration-200 active:scale-95">
+                Buy Now
+              </button>
             </div>
-            <div className="information-stock">stock: {product.stock}</div>
-            <button className="btn btn-primary">Add to Cart</button>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
 export async function generateStaticParams() {
-  const res = await fetch(`${process.env.BASEURL}/products`);
+  const res = await fetch(`${process.env.BASE_URL}/products`);
   const { products } = await res.json();
 
   return products.map((product) => ({
